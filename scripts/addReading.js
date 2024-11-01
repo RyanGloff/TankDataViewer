@@ -25,7 +25,7 @@ function addReading() {
 				parameters.forEach((parameter, index) => console.log(`${index + 1}: ${parameter.name}`));
 				console.log('----------------------');
 				return performQuestion('Enter a parameter number: ')
-				.then(parameterNumber => parameters[parameterNumber])
+				.then(parameterNumber => parameters[parameterNumber - 1])
 				.then(parameter => {
 					return { ...data, parameter };
 				});
