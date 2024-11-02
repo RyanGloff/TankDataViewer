@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url';
 
 import getILog from './getILog.js';
 import getTLog from './getTLog.js';
+import getStartDay from './getStartDay.js';
 
 const didToParam = {
 	'2_0': 'alk',
@@ -16,12 +17,7 @@ function genReading(parameterName, value, time) {
 export default function fetchFromApex(host, username, password) {
 	const promises = [];
 	const numDays = 7;
-	const startDate = new Date(Date.now() - (numDays * 24 * 60 * 60 * 1000));
-	const yearStr = startDate.getFullYear() % 100;
-	const monthStr = `0${startDate.getMonth() + 1}`.slice(-2);
-	const dayStr = `0${startDate.getDate()}`.slice(-2);
-	const startDateStr = `${yearStr}${monthStr}${dayStr}`;
-	console.log(`StartDateStr: ${startDateStr}`);
+	const startDateStr = getStartDay(numDays);
 
 	promises.push(
 		getILog(host, username, password, startDateStr, numDays)

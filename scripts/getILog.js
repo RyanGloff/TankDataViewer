@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'url';
 import fetch from 'node-fetch';
 import getConnectSid from './getConnectSid.js';
 
@@ -19,6 +20,16 @@ async function getILog(host, username, password, startDay, numDays) {
   });
   const body = await response.json();
   return body;
+}
+
+if (process.argv[1] === fileURLToPath) {
+	const host = process.argv[2];
+	const numDays = process.argv[3] || 7;
+	const startDay = process.argv[4] || '';
+	const username = process.argv[5] || 'admin';
+	const password = process.argv [6] || '1234';
+	getILog(host, username, password, startDay, numDays)
+	.then(v => console.log(v));
 }
 
 export default getILog;

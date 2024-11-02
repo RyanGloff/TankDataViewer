@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { fileURLToPath } from 'url';
+import getStartDay from './getStartDay.js';
 import getConnectSid from './getConnectSid.js';
 
 async function getTLog(host, username, password, startDay, numDays) {
@@ -25,8 +26,8 @@ async function getTLog(host, username, password, startDay, numDays) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
 	const host = process.argv[2];
-	const startDate = process.argv[3];
-	const numDays = process.argv[4] || 7;
+	const numDays = process.argv[3] || 7;
+	const startDate = process.argv[4] || getStartDay(numDays);
 	const username = process.argv[5] || 'admin';
 	const password = process.argv[6] || '1234';
 	getTLog(host, username, password, startDate, numDays)
