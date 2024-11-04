@@ -6,7 +6,6 @@ import getConnectSid from './getConnectSid.js';
 async function getTLog(host, username, password, startDay, numDays) {
   const { connectSid } = await getConnectSid(host, username, password);
   const url = `http://${host}/rest/tlog?days=${numDays || 7}&sdate=${startDay}&_=${Date.now()}`;
-  console.log(url);
   const response = await fetch(url, {
     "headers": {
       "accept": "application/json, text/javascript, */*; q=0.01",
@@ -30,8 +29,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 	const startDate = process.argv[4] || getStartDay(numDays);
 	const username = process.argv[5] || 'admin';
 	const password = process.argv[6] || '1234';
-	getTLog(host, username, password, startDate, numDays)
-	.then(v => console.log(v));
+	getTLog(host, username, password, startDate, numDays);
 }
 
 export default getTLog;

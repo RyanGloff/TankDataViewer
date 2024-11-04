@@ -3,13 +3,15 @@ import { fileURLToPath } from 'url';
 
 export default function storeParameterReading(pgClient, tank_id, parameter_id, value, time) {
 	const sql = `
-INSERT INTO tank_data_schema.parameter_reading(tank_id, parameter_id, value, time)
-SELECT $1, $2, $3, $4 WHERE NOT EXISTS(
-	SELECT 1 FROM tank_data_schema.parameter_reading WHERE tank_id = $1 AND parameter_id = $2 AND time = $4
-);
+INSERT INTO tank_data_schema.parameter_reading(tank_id, parameter_id, value, time) VALUES ($1, $2, $3, $4);
 	`;
 	const params = [ tank_id, parameter_id, value, time ];
-	return pgClient.query(sql, params).then(res => res.rows);
+	return pgClient.query(sql, params).catch(err => {
+		if (!err.detail.indexOf('already exists')) {
+			throw err;
+		}
+		return null;
+	});
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

@@ -6,12 +6,10 @@ export default function getStartDay(daysAgo) {
         const monthStr = `0${startDate.getMonth() + 1}`.slice(-2);
         const dayStr = `0${startDate.getDate()}`.slice(-2);
         const startDateStr = `${yearStr}${monthStr}${dayStr}`;
-        console.log(`StartDateStr: ${startDateStr}`);
         return startDateStr;
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
 	const daysAgo = parseInt(process.argv[2]) || 7;
 	const startDay = getStartDay(daysAgo);
-	console.log(startDay);
 }

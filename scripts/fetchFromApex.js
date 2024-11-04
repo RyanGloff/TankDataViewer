@@ -16,11 +16,11 @@ function genReading(parameterName, value, time) {
 
 export default function fetchFromApex(host, username, password) {
 	const promises = [];
-	const numDays = 7;
+	const numDays = 2;
 	const startDateStr = getStartDay(numDays);
 
 	promises.push(
-		getILog(host, username, password, startDateStr, numDays)
+		getILog(host, username, password, startDateStr, numDays + 1)
 		.then(v => v.ilog.record.flatMap(record => {
 			return [
 				genReading('temp', record.data[0].value, record.date),
@@ -31,12 +31,8 @@ export default function fetchFromApex(host, username, password) {
 
 
 	promises.push(
-		getTLog(host, username, password, startDateStr, numDays)
+		getTLog(host, username, password, startDateStr, numDays + 1)
 		.then(v => v.tlog.record.map(record => genReading(didToParam[record.did], record.value, record.date)))
-		.then(v => {
-			console.log(v);
-			return v;
-		})
 	);
 
 	return Promise.all(promises).then(fulfilled => fulfilled.flatMap(x => x));

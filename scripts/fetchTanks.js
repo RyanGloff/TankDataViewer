@@ -7,5 +7,5 @@ export default function fetchTanks(pgClient) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-	usePgClient('postgres', pgClient => fetchTanks(pgClient).then(tanks => console.log(tanks)));
+	usePgClient('postgres', pgClient => fetchTanks(pgClient));
 }

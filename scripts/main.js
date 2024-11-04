@@ -18,17 +18,28 @@ function cacheParameters(pgClient) {
 }
 
 function main() {
+	console.log(`Starting script to pull from Apex and inject into postgres: ${(new Date(Date.now())).toISOString()}`);
 	usePgClient('tank_data_injector', pgClient => {
 		return cacheParameters(pgClient)
-		.then(() => console.log(parameterCache))
 		.then(() => fetchTanks(pgClient))
 		.then(tanks => Promise.all(tanks.map(tank => {
 			if (!tank.apex_host || tank.apex_host.length === 0) return;
 			return fetchFromApex(tank.apex_host, 'admin', '1234') // Hardcoded the default values for apex.local
+			.then(readings => {
+				console.log(`Found ${readings.length}`);
+				return readings;
+			})
 			.then(readings => readings.map(reading => {
-				console.log(JSON.stringify(reading));
-				console.log(parameterCache[reading.parameterName]);
-				return storeParameterReading(pgClient, tank.id, parameterCache[reading.parameterName].id, reading.value, new Date(reading.time * 1000));
+				return storeParameterReading(pgClient, tank.id, parameterCache[reading.parameterName].id, reading.value, new Date(reading.time * 1000))
+					.then(v => {
+						if (v === null) {
+							// Already in the system
+							//console.log(`Already in the system: ${JSON.stringify(reading)}`);
+						} else {
+							console.log(`Reading added to the system: ${JSON.stringify(reading)}`);
+						}
+						return v;
+					});
 			})).then(v => Promise.all(v));
 		})));
 	});
