@@ -53,6 +53,27 @@ ALTER TABLE parameter_reading
 ALTER TABLE parameter_reading
 	ADD CONSTRAINT parameter_reading_time_parameter_id_unique UNIQUE (time, parameter_id);
 
+-- Alarm table
+CREATE SEQUENCE alarm_id_seq;
+CREATE TABLE alarm (
+  id INTEGER NOT NULL DEFAULT nextval('alarm_id_seq') PRIMARY KEY,
+  name VARCHAR(256) NOT NULL,
+  parameter_id BIGINT NOT NULL,
+  tank_id BIGINT NOT NULL,
+  high_limit DOUBLE PRECISION,
+  low_limit DOUBLE PRECISION,
+  severity INTEGER DEFAULT 1
+);
+
+ALTER TABLE alarm
+	ADD CONSTRAINT alarm_fkey_tank_id
+		FOREIGN KEY (tank_id)
+		REFERENCES tank (id);
+
+ALTER TABLE alarm
+	ADD CONSTRAINT alarm_fkey_parameter_id
+		FOREIGN KEY (parameter_id)
+		REFERENCES parameter (id);
 
 -- Setting permissions for our data injection script --
 CREATE USER tank_data_injector;
@@ -72,3 +93,4 @@ GRANT USAGE ON SCHEMA tank_data_schema TO dashboard_user;
 GRANT SELECT ON TABLE parameter_reading TO dashboard_user;
 GRANT SELECT ON TABLE parameter TO dashboard_user;
 GRANT SELECT ON TABLE tank TO dashboard_user;
+GRANT SELECT ON TABLE alarm TO dashboard_user;
