@@ -1,8 +1,8 @@
-import usePgClient from './usePgClient.js';
-import fetchTanks from './fetchTanks.js';
-import fetchParameters from './fetchParameters.js';
-import storeAlarm from './storeAlarm.js';
-import performQuestion from './performQuestion.js';
+import usePgClient from './lib/usePgClient.js';
+import fetchTanks from './lib/fetchTanks.js';
+import fetchParameters from './lib/fetchParameters.js';
+import storeAlarm from './lib/storeAlarm.js';
+import performQuestion from './lib/performQuestion.js';
 
 function addAlarm() {
 	// Pick a tank

@@ -13,7 +13,7 @@ export default function usePgClient(username, usageFn) {
 		process.exit(1);
 	}
 	const pgConfig = {
-		host: '192.168.50.53',
+		host: '192.168.50.13',
 		port: 5432,
 		username,
 		password: pwd,

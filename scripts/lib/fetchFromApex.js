@@ -1,8 +1,8 @@
 import { fileURLToPath } from 'url';
 
-import getILog from './getILog.js';
-import getTLog from './getTLog.js';
-import getStartDay from './getStartDay.js';
+import getILog from './apex/getILog.js';
+import getTLog from './apex/getTLog.js';
+import getStartDay from './apex/getStartDay.js';
 
 const didToParam = {
 	'2_0': 'alk',

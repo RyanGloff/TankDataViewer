@@ -1,8 +1,8 @@
-import usePgClient from './usePgClient.js';
-import storeParameterReading from './storeParameterReading.js';
-import fetchTanks from './fetchTanks.js';
-import fetchParameters from './fetchParameters.js';
-import performQuestion from './performQuestion.js';
+import usePgClient from './lib/usePgClient.js';
+import storeParameterReading from './lib/storeParameterReading.js';
+import fetchTanks from './lib/fetchTanks.js';
+import fetchParameters from './lib/fetchParameters.js';
+import performQuestion from './lib/performQuestion.js';
 
 function addReading() {
 	// Pick a tank
