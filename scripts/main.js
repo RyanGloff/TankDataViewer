@@ -4,11 +4,11 @@
  by the setup script in the postgres directory and has permissions limited only to required permissions
  */
 
-import usePgClient from './usePgClient.js';
-import fetchFromApex from './fetchFromApex.js';
-import fetchParameters from './fetchParameters.js';
-import fetchTanks from './fetchTanks.js';
-import storeParameterReading from './storeParameterReading.js';
+import usePgClient from './lib/usePgClient.js';
+import fetchFromApex from './lib/fetchFromApex.js';
+import fetchParameters from './lib/fetchParameters.js';
+import fetchTanks from './lib/fetchTanks.js';
+import storeParameterReading from './lib/storeParameterReading.js';
 
 const parameterCache = {};
 
