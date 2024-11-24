@@ -1,5 +1,5 @@
 import usePgClient from './usePgClient.js';
-import fileURLToPath from 'url';
+import { fileURLToPath from 'url';
 
 function storeReading(pgClient, tankId, parameterId, value, time) {
 	const sql = `
