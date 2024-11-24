@@ -3,7 +3,7 @@ import promptForParameter from './lib/prompt/promptForParameter.js';
 import promptForTank from './lib/prompt/promptForTank.js';
 import promptForValue from './lib/prompt/promptForValue.js';
 import promptForTime from './lib/prompt/promptForTime.js';
-import storeParameterReading from './lib/storeParameterReading.js';
+import storeParameterReading from './lib/store/storeParameterReading.js';
 import usePgClient from './lib/usePgClient.js';
 
 function addReading() {

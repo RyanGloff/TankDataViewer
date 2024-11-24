@@ -2,7 +2,7 @@ import performQuestion from './lib/prompt/performQuestion.js';
 import promptForTank from './lib/prompt/promptForTank.js';
 import promptForParameter from './lib/prompt/promptForParameter.js';
 import promptForValue from './lib/prompt/promptForValue.js';
-import storeAlarm from './lib/storeAlarm.js';
+import storeAlarm from './lib/store/storeAlarm.js';
 import usePgClient from './lib/usePgClient.js';
 
 function addAlarm() {

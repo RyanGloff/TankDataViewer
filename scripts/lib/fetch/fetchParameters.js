@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'url';
-import usePgClient from './usePgClient.js';
+import usePgClient from '../usePgClient.js';
 
 export default function fetchParameters(pgClient) {
 	const sql = `SELECT * FROM tank_data_schema.parameter;`;

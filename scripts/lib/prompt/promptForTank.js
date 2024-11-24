@@ -1,4 +1,4 @@
-import fetchTanks from '../fetchTanks.js';
+import fetchTanks from '../fetch/fetchTanks.js';
 import promptFromList from './promptFromList.js';
 
 export default function promptForTank(pgClient, dataName, data) {

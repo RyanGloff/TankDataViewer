@@ -1,4 +1,4 @@
-import usePgClient from './usePgClient.js';
+import usePgClient from '../usePgClient.js';
 import { fileURLToPath } from 'url';
 
 export default function storeParameterReading(pgClient, tank_id, parameter_id, value, time) {
