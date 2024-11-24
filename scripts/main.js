@@ -5,10 +5,10 @@
  */
 
 import usePgClient from './lib/usePgClient.js';
-import fetchFromApex from './lib/fetchFromApex.js';
-import fetchParameters from './lib/fetchParameters.js';
-import fetchTanks from './lib/fetchTanks.js';
-import storeParameterReading from './lib/storeParameterReading.js';
+import fetchFromApex from './lib/fetch/fetchFromApex.js';
+import fetchParameters from './lib/fetch/fetchParameters.js';
+import fetchTanks from './lib/fetch/fetchTanks.js';
+import storeParameterReading from './lib/store/storeParameterReading.js';
 
 const parameterCache = {};
 
