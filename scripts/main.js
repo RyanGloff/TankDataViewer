@@ -17,31 +17,48 @@ function cacheParameters(pgClient) {
 	.then(parameters => parameters.forEach(parameter => parameterCache[parameter.apex_name] = parameter))
 }
 
+function filterOutNonApexTanks(tanks) {
+  function isApexTank(tank) {
+    return tank.apex_host && tank.apex_host.length !== 0;
+  }
+
+  return tanks.filter(isApexTank);
+}
+
+function logReadings(readings) {
+  console.log(`Found ${readings.length}`);
+  return readings;
+}
+
+function storeEachReading(pgClient, tank, readings) {
+  return readings.map(reading => {
+    return storeParameterReading(pgClient, tank.id, parameterCache[reading.parameterName].id, reading.value, new Date(reading.time * 1000))
+      .then(logAddedReadings);
+  });
+}
+
+function logAddedReadings(promiseFromStoring) {
+  if (promiseFromStoring === null) return null;
+  console.log(`Reading added to the system: ${JSON.stringify(reading)}`);
+  return promiseFromStoring;
+}
+
+function fetchAndStoreReadingsForTanks(pgClient, tanks) {
+  return Promise.all(tanks.map(tank => {
+    return fetchFromApex(tank.apex_host, 'admin', '1234') // Hardcoded the default values for apex.local
+    .then(logReadings)
+    .then(readings => storeEachReading(pgClient, tank, readings))
+    .then(v => Promise.all(v));
+  }));
+}
+
 function main() {
 	console.log(`Starting script to pull from Apex and inject into postgres: ${(new Date(Date.now())).toISOString()}`);
 	usePgClient('tank_data_injector', pgClient => {
 		return cacheParameters(pgClient)
 		.then(() => fetchTanks(pgClient))
-		.then(tanks => Promise.all(tanks.map(tank => {
-			if (!tank.apex_host || tank.apex_host.length === 0) return;
-			return fetchFromApex(tank.apex_host, 'admin', '1234') // Hardcoded the default values for apex.local
-			.then(readings => {
-				console.log(`Found ${readings.length}`);
-				return readings;
-			})
-			.then(readings => readings.map(reading => {
-				return storeParameterReading(pgClient, tank.id, parameterCache[reading.parameterName].id, reading.value, new Date(reading.time * 1000))
-					.then(v => {
-						if (v === null) {
-							// Already in the system
-							//console.log(`Already in the system: ${JSON.stringify(reading)}`);
-						} else {
-							console.log(`Reading added to the system: ${JSON.stringify(reading)}`);
-						}
-						return v;
-					});
-			})).then(v => Promise.all(v));
-		})));
+    .then(filterOutNonApexTanks)
+		.then(tanks => fetchAndStoreReadingsForTanks(pgClient, tanks));
 	});
 }
 
