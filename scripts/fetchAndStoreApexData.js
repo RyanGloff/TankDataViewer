@@ -10,6 +10,9 @@ import fetchParameters from './lib/fetch/fetchParameters.js';
 import fetchTanks from './lib/fetch/fetchTanks.js';
 import storeParameterReading from './lib/store/storeParameterReading.js';
 
+const APEX_DEFAULT_USERNAME = 'admin';
+const APEX_DEFAULT_PASSWORD = '1234';
+
 const parameterCache = {};
 
 function cacheParameters(pgClient) {
@@ -45,7 +48,7 @@ function logAddedReadings(promiseFromStoring) {
 
 function fetchAndStoreReadingsForTanks(pgClient, tanks) {
   return Promise.all(tanks.map(tank => {
-    return fetchFromApex(tank.apex_host, 'admin', '1234') // Hardcoded the default values for apex.local
+    return fetchFromApex(tank.apex_host, APEX_DEFAULT_USERNAME, APEX_DEFAULT_PASSWORD) // Hardcoded the default values for apex.local
     .then(logReadings)
     .then(readings => storeEachReading(pgClient, tank, readings))
     .then(v => Promise.all(v));
