@@ -28,14 +28,30 @@ export default function usePgClient(username, usageFn) {
 		db: process.env['PG_DB_NAME']
 	};
 	const conString = `postgres://${pgConfig.username}:${pgConfig.password}@${pgConfig.host}:${pgConfig.port}/${pgConfig.db}`;
-	const client = new pg.Client(conString);
-	client.connect();
-
-	const usagePromise = usageFn(client)
+	let client;
+  try {
+    client = new pg.Client(conString);
+  } catch (err) {
+    console.error(`
+Error creating pg Client.
+Connection Params:
+\tHost: ${pgConfig.host}
+\tPort: ${pgConfig.port}
+\tUsername: ${pgConfig.username}
+\tPassword: ${pgConfig.password}
+\tDatabase: ${pgConfig.db}
+Error: ${err}
+`);
+    throw err;
+  }
+	return client.connect()
+  .then(() => usageFn(client)
+    .catch(err => console.error(`Error during business logic.\nError: ${err}`))
 		.then(v => {
 			client.end();
 			return v;
-		});
-
-	return usagePromise;
+		})
+    .catch(err => console.error(`Error closing connection.\nError:${err}`))
+  )
+  .catch(err => console.error(`Error during pg connection.\nConnection string: ${conString}\nError: ${err}`));
 }
