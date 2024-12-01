@@ -24,6 +24,8 @@ export default function fetchParameterReadings(pgClient, options) {
     params.push(tankId);
   }
 
+  sql += ' ORDER BY time;'
+
   console.log(`Generated SQL: ${sql}`);
   console.log(`Params: ${JSON.stringify(params)}`);
   return pgClient.query(sql, params).then(res => res.rows);
