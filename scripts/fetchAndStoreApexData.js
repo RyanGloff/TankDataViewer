@@ -40,10 +40,10 @@ function storeEachReading(pgClient, tank, readings) {
   });
 }
 
-function logAddedReadings(promiseFromStoring) {
-  if (promiseFromStoring === null) return null;
-  console.log(`Reading added to the system: ${JSON.stringify(reading)}`);
-  return promiseFromStoring;
+function logAddedReadings(storeReadingResult) {
+  if (storeReadingResult === null) return null;
+  console.log(`Reading added to the system: ${storeReadingResult.rowCount}`);
+  return storeReadingResult;
 }
 
 function fetchAndStoreReadingsForTanks(pgClient, tanks) {
