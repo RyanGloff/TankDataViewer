@@ -41,17 +41,18 @@ Connection Params:
 \tPassword: ${pgConfig.password}
 \tDatabase: ${pgConfig.db}
 Error: ${err}
+Stack: ${err.stack}
 `);
     throw err;
   }
 	return client.connect()
   .then(() => usageFn(client)
-    .catch(err => console.error(`Error during business logic.\nError: ${err}`))
+    .catch(err => console.error(`Error during business logic.\nError: ${err}\nStack: ${err.stack}`))
 		.then(v => {
 			client.end();
 			return v;
 		})
-    .catch(err => console.error(`Error closing connection.\nError:${err}`))
+    .catch(err => console.error(`Error closing connection.\nError:${err}\nStack: ${err.stack}`))
   )
-  .catch(err => console.error(`Error during pg connection.\nConnection string: ${conString}\nError: ${err}`));
+  .catch(err => console.error(`Error during pg connection.\nConnection string: ${conString}\nError: ${err}\nStack: ${err.stack}`));
 }
