@@ -1,5 +1,7 @@
+`cat scripts/deployment.env`
+
+BACKUP_PATH=${BACKUP_DIR}/backup-${DATE}.sql
 DATE=`date '+%Y-%m-%d'`
-BACKUP_PATH="/home/ryan/tank_data_poller/backups/backup-${DATE}.sql"
 export PGPASSWORD=docker
 
 echo "Starting dump for ${DATE}"

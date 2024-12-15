@@ -1,6 +1,6 @@
-WD=/home/ryan/tank_data_poller
-ENV_FILE=${WD}/prod.env
-MAIN_JS_FILE=${WD}/scripts/fetchAndStoreApexData.js
+`cat /opt/tankDataViewer/scripts/deployment.env`
 
-. ${ENV_FILE}
-node ${MAIN_JS_FILE}
+NODE_MAIN_PATH=$DEPLOYMENT_DIR/scripts/fetchAndStoreApexData.js
+
+. $DEPLOYMENT_DIR/prod.env
+node $NODE_MAIN_PATH
