@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'url';
 import usePgClient from '../usePgClient.js';
 
-function fetchLatestReading(pgClient, parameterId, tankId) {
+export default function fetchLatestReading(pgClient, parameterId, tankId) {
   const sql = `
 SELECT * FROM tank_data_schema.parameter_reading
 WHERE parameter_id = $1 AND tank_id = $2
@@ -9,7 +9,8 @@ ORDER BY time DESC
 LIMIT 1;
   `;
   const params = [ parameterId, tankId ];
-  return pgClient.query(sql, params);
+  return pgClient.query(sql, params)
+  .then(v => v.rows[0]);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
