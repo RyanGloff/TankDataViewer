@@ -7,7 +7,7 @@ CREATE TABLE device_type(
 );
 
 INSERT INTO device_type(name) VALUES
-('simple_plug');
+('kasa_plug');
 
 CREATE SEQUENCE device_id_seq;
 CREATE TABLE device (
@@ -21,5 +21,28 @@ ALTER TABLE device
   ADD CONSTRAINT device_fkey_device_type_id
     FOREIGN KEY (device_type_id)
     REFERENCES device_type (id);
+
+CREATE SEQUENCE device_capability_id_seq;
+CREATE TABLE device_capability(
+  id INTEGER NOT NULL DEFAULT nextval('device_capability_id_seq'),
+  name VARCHAR(64) NOT NULL,
+  device_type_id INTEGER NOT NULL
+);
+
+ALTER TABLE device_capability
+  ADD CONSTRAINT device_fkey_device_type_id
+    FOREIGN KEY (device_type_id)
+    REFERENCES device_type (id);
+
+-- Add supported capabilities for each device_type here
+INSERT INTO device_capability(name, device_type_id) (
+  SELECT 'TURN_ON', id from tank_data_schema.device_type WHERE name = 'kasa_plug'
+);
+INSERT INTO device_capability(name, device_type_id) (
+  SELECT 'TURN_OFF', id from tank_data_schema.device_type WHERE name = 'kasa_plug'
+);
+INSERT INTO device_capability(name, device_type_id) (
+  SELECT 'GET_STATE', id from tank_data_schema.device_type WHERE name = 'kasa_plug'
+);
 
 \echo 'Patch_1.sql applied'
