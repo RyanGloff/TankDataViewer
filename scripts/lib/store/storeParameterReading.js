@@ -17,7 +17,7 @@ INSERT INTO tank_data_schema.parameter_reading(tank_id, parameter_id, value, tim
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
 	const tankId = process.argv[2];
 	const parameterId = process.argv[3];
-	const value = process.argv[4];
+	const value = parseFloat(process.argv[4]);
 	const time = new Date(process.argv[5] || Date.now());
 	console.log(`Storing parameter with values: TankId -> ${tankId}, ParameterId -> ${parameterId}, Value -> ${value}, Time -> ${time.toISOString()}`);
 	usePgClient('postgres', pgClient => storeParameterReading(pgClient, tankId, parameterId, value, time));
