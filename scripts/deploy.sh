@@ -1,10 +1,13 @@
 `cat scripts/deployment.env`
 
 # Copy all sources
+echo "Copying resources"
 cp -r . $DEPLOYMENT_DIR
 cd $DEPLOYMENT_DIR/scripts
+echo "npm install"
 npm install
 
+echo "Making backup and log directories"
 mkdir -p $BACKUP_DIR
 chown -R ryan $BACKUP_DIR
 
@@ -13,6 +16,7 @@ chown -R ryan $LOG_DIR
 
 # Update crontab
 ## Remove existing to avoid duplication
+echo "Updating cron"
 crontab -l | grep -v $MAIN_SCRIPT_PATH | crontab -
 crontab -l | grep -v $BACKUP_SCRIPT_PATH | crontab -
 
@@ -29,4 +33,4 @@ EOL
 crontab -u ryan tankDataViewerCron
 rm tankDataViewerCron
 
-
+echo "Deployment finished: `date`" >> ${LOG_DIR}/deployment-log.txt 2>&1
