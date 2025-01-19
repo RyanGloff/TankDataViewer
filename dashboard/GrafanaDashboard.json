@@ -658,9 +658,7 @@
               "id": "byNames",
               "options": {
                 "mode": "exclude",
-                "names": [
-                  "calciumdosing"
-                ],
+                "names": ["calciumdosing"],
                 "prefix": "All except:",
                 "readOnly": true
               }
@@ -1305,3 +1303,4 @@
   "version": 81,
   "weekStart": ""
 }
+
