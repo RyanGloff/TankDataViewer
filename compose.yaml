@@ -13,5 +13,18 @@ services:
       interval: 1s
       timeout: 5s
       retries: 10
+  grafana:
+    image: grafana/grafana-enterprise
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+    volumes:
+      - grafanadata:/var/lib/grafana
+
 volumes:
   pgdata:
+  grafanadata:
