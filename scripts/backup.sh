@@ -1,4 +1,4 @@
-`cat scripts/deployment.env`
+`cat /opt/tankDataViewer/scripts/deployment.env`
 
 BACKUP_PATH=${BACKUP_DIR}/backup-${DATE}.sql
 DATE=`date '+%Y-%m-%d'`

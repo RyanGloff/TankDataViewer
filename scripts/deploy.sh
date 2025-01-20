@@ -1,4 +1,4 @@
-`cat scripts/deployment.env`
+`cat /opt/tankDataViewer/scripts/deployment.env`
 
 # Copy all sources
 echo "Copying resources"
