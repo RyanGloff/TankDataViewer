@@ -1,20 +1,25 @@
 services:
   db:
     image: postgres
+    container_name: postgres_db
     restart: always
     ports:
       - "5432:5432"
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: docker
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./postgres/setup.sql:/docker-entrypoint-initdb.d/setup.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 1s
       timeout: 5s
       retries: 10
+
   grafana:
     image: grafana/grafana-enterprise
+    container_name: grafana
     restart: always
     ports:
       - "3000:3000"
@@ -24,7 +29,21 @@ services:
       - GF_SERVER_ROOT_URL=http://localhost:3000
     volumes:
       - grafanadata:/var/lib/grafana
-
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: app
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - ./app:/usr/src/app
+    command: ["node", "index.js"]
 volumes:
   pgdata:
   grafanadata:
