@@ -31,7 +31,8 @@ CREATE TABLE parameter_reading(
 	tank_id BIGINT NOT NULL,
 	parameter_id BIGINT NOT NULL,
 	value REAL NOT NULL,
-	time TIMESTAMPTZ NOT NULL
+	time TIMESTAMPTZ NOT NULL,
+  show_in_dashboard BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 ALTER TABLE parameter_reading
@@ -89,9 +90,6 @@ GRANT SELECT ON TABLE parameter TO dashboard_user;
 GRANT SELECT ON TABLE tank TO dashboard_user;
 GRANT SELECT ON TABLE alarm TO dashboard_user;
 
-ALTER TABLE tank_data_schema.parameter_reading
-ADD show_in_dashboard BOOLEAN NOT NULL DEFAULT TRUE;
-
 INSERT INTO parameter(name, apex_name) VALUES
 ('temperature', 'temp'),
 ('ph', 'ph'),
@@ -108,4 +106,3 @@ INSERT INTO tank(name, apex_host) VALUES
 ('WB 90.3', '192.168.51.10'),
 ('Test Tank', null);
 
-ALTER TABLE tank_data_schema.parameter_reading ALTER COLUMN value TYPE REAL USING (value::real);
