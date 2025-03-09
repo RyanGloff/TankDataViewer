@@ -70,27 +70,27 @@ ALTER TABLE alarm
 		FOREIGN KEY (parameter_id)
 		REFERENCES parameter (id);
 
--- Kasa Device Type table
-CREATE SEQUENCE kasa_device_type_id_seq;
-CREATE TABLE kasa_device_type (
-  id INTEGER NOT NULL DEFAULT nextval('kasa_device_type_id_seq') PRIMARY KEY,
+-- Device Type table
+CREATE SEQUENCE device_type_id_seq;
+CREATE TABLE device_type (
+  id INTEGER NOT NULL DEFAULT nextval('device_type_id_seq') PRIMARY KEY,
   name VARCHAR(256) NOT NULL
 );
 
--- Kasa Device table
-CREATE SEQUENCE kasa_device_id_seq;
-CREATE TABLE kasa_device (
-  id INTEGER NOT NULL DEFAULT nextval('kasa_device_id_seq') PRIMARY KEY,
+-- Device table
+CREATE SEQUENCE device_id_seq;
+CREATE TABLE device (
+  id INTEGER NOT NULL DEFAULT nextval('device_id_seq') PRIMARY KEY,
   name VARCHAR(256) NOT NULL,
   host VARCHAR(16) NOT NULL,
   child_name VARCHAR(256),
   device_type_id INTEGER NOT NULL
 );
 
-ALTER TABLE kasa_device
-  ADD CONSTRAINT kasa_device_fkey_device_type_id
+ALTER TABLE device
+  ADD CONSTRAINT device_fkey_device_type_id
     FOREIGN KEY (device_type_id)
-    REFERENCES kasa_device_type (id);
+    REFERENCES device_type (id);
 
 -- Setting permissions for our data injection script --
 CREATE USER tank_data_injector;
@@ -112,17 +112,17 @@ GRANT SELECT ON TABLE parameter TO dashboard_user;
 GRANT SELECT ON TABLE tank TO dashboard_user;
 GRANT SELECT ON TABLE alarm TO dashboard_user;
 
-INSERT INTO kasa_device_type(name) VALUES
+INSERT INTO device_type(name) VALUES
 ('HS300');
 
-INSERT INTO kasa_device(name, host, child_name, device_type_id) VALUES
-('10G Light', '192.168.52.10', '10G Light', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
-('10G Filter', '192.168.52.10', '10G Filter', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
-('10G Circulator', '192.168.52.10', '10G Circulator', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
-('10G Heater', '192.168.52.10', '10G Heater', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
-('10G Air', '192.168.52.10', '10G Air', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
-('10G Air', '192.168.52.10', '10G Air', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
-('10G Plug 6', '192.168.52.10', '10G Plug 6', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1));
+INSERT INTO device(name, host, child_name, device_type_id) VALUES
+('10G Light', '192.168.52.10', '10G Light', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
+('10G Filter', '192.168.52.10', '10G Filter', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
+('10G Circulator', '192.168.52.10', '10G Circulator', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
+('10G Heater', '192.168.52.10', '10G Heater', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
+('10G Air', '192.168.52.10', '10G Air', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
+('10G Air', '192.168.52.10', '10G Air', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
+('10G Plug 6', '192.168.52.10', '10G Plug 6', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1));
 
 
 INSERT INTO parameter(name, apex_name) VALUES
