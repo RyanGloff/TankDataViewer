@@ -83,7 +83,7 @@ CREATE TABLE kasa_device (
   id INTEGER NOT NULL DEFAULT nextval('kasa_device_id_seq') PRIMARY KEY,
   name VARCHAR(256) NOT NULL,
   host VARCHAR(16) NOT NULL,
-  child_id VARCHAR(256),
+  child_name VARCHAR(256),
   device_type_id INTEGER NOT NULL
 );
 
@@ -115,7 +115,7 @@ GRANT SELECT ON TABLE alarm TO dashboard_user;
 INSERT INTO kasa_device_type(name) VALUES
 ('HS300');
 
-INSERT INTO kasa_device(name, host, child_id, device_type_id) VALUES
+INSERT INTO kasa_device(name, host, child_name, device_type_id) VALUES
 ('10G Light', '192.168.52.10', '10G Light', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
 ('10G Filter', '192.168.52.10', '10G Filter', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
 ('10G Circulator', '192.168.52.10', '10G Circulator', (SELECT id FROM kasa_device_type WHERE name = 'HS300' LIMIT 1)),
