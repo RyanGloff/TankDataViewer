@@ -2,3 +2,4 @@ logs/
 backups/
 prod.env
 app/node_modules
+.env
