@@ -92,6 +92,25 @@ ALTER TABLE device
     FOREIGN KEY (device_type_id)
     REFERENCES device_type (id);
 
+-- Device Power Target table
+CREATE SEQUENCE device_power_target_id_seq;
+CREATE TABLE device_power_target (
+  id INTEGER NOT NULL DEFAULT nextval('device_power_target_id_seq') PRIMARY KEY,
+  device_id INTEGER NOT NULL,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  desired_power_state BOOLEAN NOT NULL,
+  enforce_on_discrepancy BOOLEAN NOT NULL DEFAULT FALSE,
+  notify_on_discrepancy BOOLEAN NOT NULL DEFAULT FALSE,
+  min_acceptable_draw INTEGER,
+  max_acceptable_draw INTEGER
+);
+
+ALTER TABLE device_power_target
+  ADD CONSTRAINT device_power_target_fkey_device_id
+    FOREIGN KEY (device_id)
+    REFERENCES device (id);
+
 -- Setting permissions for our data injection script --
 CREATE USER tank_data_injector;
 ALTER USER tank_data_injector WITH PASSWORD 'tankDataInjector';
@@ -121,7 +140,6 @@ INSERT INTO device(name, host, child_name, device_type_id) VALUES
 ('10G Circulator', '192.168.52.10', '10G Circulator', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
 ('10G Heater', '192.168.52.10', '10G Heater', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
 ('10G Air', '192.168.52.10', '10G Air', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
-('10G Air', '192.168.52.10', '10G Air', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1)),
 ('10G Plug 6', '192.168.52.10', '10G Plug 6', (SELECT id FROM device_type WHERE name = 'HS300' LIMIT 1));
 
 
@@ -141,3 +159,10 @@ INSERT INTO tank(name, apex_host) VALUES
 ('WB 90.3', '192.168.51.10'),
 ('Test Tank', null);
 
+INSERT INTO device_power_target(device_id, start_time, end_time, desired_power_state, enforce_on_discrepancy, notify_on_discrepancy, min_acceptable_draw, max_acceptable_draw) VALUES
+((SELECT id FROM device WHERE name = '10G Light' LIMIT 1), '00:00:00', '00:00:00', TRUE, TRUE, FALSE, 17000, 17500),
+((SELECT id FROM device WHERE name = '10G Filter' LIMIT 1), '00:00:00', '00:00:00', TRUE, TRUE, TRUE, 6000, 6200),
+((SELECT id FROM device WHERE name = '10G Circulator' LIMIT 1), '00:00:00', '00:00:00', FALSE, TRUE, TRUE, 0, 0),
+((SELECT id FROM device WHERE name = '10G Heater' LIMIT 1), '00:00:00', '00:00:00', TRUE, TRUE, TRUE, 0, 55000),
+((SELECT id FROM device WHERE name = '10G Air' LIMIT 1), '00:00:00', '00:00:00', TRUE, TRUE, TRUE, 1400, 1600),
+((SELECT id FROM device WHERE name = '10G Plug 6' LIMIT 1), '00:00:00', '00:00:00', FALSE, TRUE, TRUE, 0, 0);

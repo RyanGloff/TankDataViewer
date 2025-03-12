@@ -1,26 +1,36 @@
+import { fileURLToPath } from "url";
 import Kasa from "tplink-smarthome-api";
 
 const client = new Kasa.Client();
 
-export async function getDevice(host) {
-  return await client.getDevice({ host });
-}
-
-export async function getSubDevice(host, childName) {
-  const device = await getDevice(host);
-  const child = device.sysInfo.children.filter((d) => d.alias === childName)[0];
-  return await client.getDevice({ host, childId: child.id });
-}
-
-export async function getCurrentPowerDraw(host, childName) {
-  let device;
-  if (childName) {
-    device = await getSubDevice(host, childName);
-  } else {
-    device = await getDevice(host);
+export async function getDevice(options) {
+  if (typeof options !== "object") throw new Error("Options must be an object");
+  if (options.hasOwnProperty("childId")) {
+    return await client.getDevice({
+      host: options.host,
+      childId: options.childId,
+    });
   }
+  const device = await client.getDevice({ host: options.host });
+  if (!options.hasOwnProperty("childName")) {
+    return device;
+  }
+  const child = device.sysInfo.children.filter(
+    (d) => d.alias === options.childName,
+  )[0];
+  return await client.getDevice({ host: options.host, childId: child.id });
+}
 
+export async function getCurrentPowerDraw(device) {
   return device.emeter.getRealtime();
+}
+
+export async function setPowerState(device, state) {
+  return device.setPowerState(state);
+}
+
+export async function getPowerState(device) {
+  return device.getPowerState();
 }
 
 async function main() {
@@ -29,13 +39,18 @@ async function main() {
   const fn = process.argv[4];
   switch (fn) {
     case "turnOn":
-      (await getSubDevice(host, childName)).setPowerState(true);
+      await setPowerState(await getDevice({ host, childName }), true);
       break;
     case "turnOff":
-      (await getSubDevice(host, childName)).setPowerState(false);
+      await setPowerState(await getDevice({ host, childName }), false);
       break;
-    case "getPower":
-      console.log(await getCurrentPowerDraw(host, childName));
+    case "getPowerUsage":
+      console.log(
+        await getCurrentPowerDraw(await getDevice({ host, childName })),
+      );
+      break;
+    case "getPowerState":
+      console.log(await getPowerState(await getDevice({ host, childName })));
       break;
     default:
       console.log(`Function: ${fn} is not supported`);
@@ -43,4 +58,6 @@ async function main() {
   }
 }
 
-main();
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main();
+}
