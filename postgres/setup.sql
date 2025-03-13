@@ -97,8 +97,8 @@ CREATE SEQUENCE device_power_target_id_seq;
 CREATE TABLE device_power_target (
   id INTEGER NOT NULL DEFAULT nextval('device_power_target_id_seq') PRIMARY KEY,
   device_id INTEGER NOT NULL,
-  start_time TIME NOT NULL,
-  end_time TIME NOT NULL,
+  start_time TIME,
+  end_time TIME,
   desired_power_state BOOLEAN NOT NULL,
   enforce_on_discrepancy BOOLEAN NOT NULL DEFAULT FALSE,
   notify_on_discrepancy BOOLEAN NOT NULL DEFAULT FALSE,
@@ -160,9 +160,10 @@ INSERT INTO tank(name, apex_host) VALUES
 ('Test Tank', null);
 
 INSERT INTO device_power_target(device_id, start_time, end_time, desired_power_state, enforce_on_discrepancy, notify_on_discrepancy, min_acceptable_draw, max_acceptable_draw) VALUES
-((SELECT id FROM device WHERE name = '10G Light' LIMIT 1), '00:00:00', '00:00:00', TRUE, TRUE, FALSE, 17000, 17500),
-((SELECT id FROM device WHERE name = '10G Filter' LIMIT 1), '00:00:00', '00:00:00', TRUE, TRUE, TRUE, 6000, 6200),
-((SELECT id FROM device WHERE name = '10G Circulator' LIMIT 1), '00:00:00', '00:00:00', FALSE, TRUE, TRUE, 0, 0),
-((SELECT id FROM device WHERE name = '10G Heater' LIMIT 1), '00:00:00', '00:00:00', TRUE, TRUE, TRUE, 0, 55000),
-((SELECT id FROM device WHERE name = '10G Air' LIMIT 1), '00:00:00', '00:00:00', TRUE, TRUE, TRUE, 1400, 1600),
-((SELECT id FROM device WHERE name = '10G Plug 6' LIMIT 1), '00:00:00', '00:00:00', FALSE, TRUE, TRUE, 0, 0);
+((SELECT id FROM device WHERE name = '10G Light' LIMIT 1), NULL, NULL, TRUE, TRUE, FALSE, 17000, 17500),
+((SELECT id FROM device WHERE name = '10G Filter' LIMIT 1), NULL, NULL, TRUE, TRUE, TRUE, 6000, 6200),
+((SELECT id FROM device WHERE name = '10G Circulator' LIMIT 1), '19:45:00', '20:00:00', TRUE, TRUE, TRUE, 0, 0),
+((SELECT id FROM device WHERE name = '10G Circulator' LIMIT 1), '20:00:00', '19:45:00', FALSE, TRUE, TRUE, 0, 0),
+((SELECT id FROM device WHERE name = '10G Heater' LIMIT 1), NULL, NULL, TRUE, TRUE, TRUE, 0, 55000),
+((SELECT id FROM device WHERE name = '10G Air' LIMIT 1), NULL, NULL, TRUE, TRUE, TRUE, 1400, 1600),
+((SELECT id FROM device WHERE name = '10G Plug 6' LIMIT 1), NULL, NULL, FALSE, TRUE, TRUE, 0, 0);

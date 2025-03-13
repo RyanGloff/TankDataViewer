@@ -50,7 +50,6 @@ function storeEachReading(pgClient, tank, readings) {
 
 function logAddedReadings(storeReadingResult) {
   if (storeReadingResult === null) return null;
-  console.log(`Reading added to the system: ${storeReadingResult.rowCount}`);
   return storeReadingResult;
 }
 
