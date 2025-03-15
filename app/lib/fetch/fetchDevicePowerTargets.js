@@ -3,7 +3,13 @@ import usePgClient from "../usePgClient.js";
 
 export default function fetchDevicePowerTargets(pgClient) {
   const sql = `SELECT * FROM tank_data_schema.device_power_target;`;
-  return pgClient.query(sql).then((res) => res.rows);
+  return pgClient
+    .query(sql)
+    .then((res) => res.rows)
+    .catch((err) => {
+      console.error(`Unexpected error while fetchDevicePowerTargets: ${err}`);
+      throw err;
+    });
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
