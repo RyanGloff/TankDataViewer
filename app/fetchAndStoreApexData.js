@@ -64,7 +64,24 @@ function fetchAndStoreReadingsForTanks(pgClient, tanks) {
       ) // Hardcoded the default values for apex.local
         .then(logReadings)
         .then((readings) => storeEachReading(pgClient, tank, readings))
-        .then((v) => Promise.all(v));
+        .then((v) => Promise.all(v))
+        .then((storePromises) => {
+          const { numStored, numRejected } = storePromises.reduce(
+            (acc, curr) => {
+              if (curr === null) {
+                acc.numRejected++;
+              } else {
+                acc.numStored++;
+              }
+              return acc;
+            },
+            { numStored: 0, numRejected: 0 },
+          );
+          console.log(
+            `Number Stored: ${numStored}. Number Rejected: ${numRejected}`,
+          );
+          return storePromises;
+        });
     }),
   );
 }

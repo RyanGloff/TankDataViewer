@@ -32,18 +32,30 @@ services:
       - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yaml
       - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
       - ./grafana/dashboards:/var/lib/grafana/dashboards
-  app:
+  apex-app:
     build:
       context: ./app
       dockerfile: Dockerfile
-    container_name: app
+    container_name: apex-app
     restart: unless-stopped
     env_file: .env
     depends_on:
       - db
     volumes:
       - ./app:/usr/src/app
-    command: ["node", "index.js"]
+    command: ["node", "apexFetchIndex.js"]
+  energy-monitor-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: energy-monitor-app
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - ./app:/usr/src/app
+    command: ["node", "energyMonitorIndex.js"]
 volumes:
   pgdata:
   grafanadata:
