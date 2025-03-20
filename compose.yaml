@@ -56,6 +56,35 @@ services:
     volumes:
       - ./app:/usr/src/app
     command: ["node", "energyMonitorIndex.js"]
+  api-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: api-app
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - ./app:/usr/src/app
+    ports:
+      - "8080:8080"
+    command: ["node", "apiIndex.js"]
+  web-ui-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: web-ui-app
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - db
+      - api-app
+    volumes:
+      - ./app:/usr/src/app
+    ports:
+      - "8081:8081"
+    command: ["node", "webUIIndex.js"]
 volumes:
   pgdata:
   grafanadata:
